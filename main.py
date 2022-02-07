@@ -55,7 +55,7 @@ class Visualization:
         heading = self.large_font.render(algorithm_name,1,self.block_colour)
         self.screen.blit(heading, ((self.width/2-heading.get_width()/2),5))
 
-        controls = self.font.render("Space - Start Sorting Algorithm", 1, self.block_colour)
+        controls = self.font.render("Space - Start Sorting Algorithm N - Create New List", 1, self.block_colour)
         self.screen.blit(controls, ((self.width/2-controls.get_width()/2),40))
 
         algorithms = self.font.render("B - Bubble Sort I - Insertion Sort M - Merge Sort", 1, self.block_colour)
@@ -178,11 +178,13 @@ def merge(visualizer,a_list,start,mid,mid1,end):
         temp_list.append(a_list[j])
         j+=1
     # set j back to zero to use as the index for temo
+    y =j
     j=0
     for x in range(start,end+1):
         a_list[x] = temp_list[j]
-        visualizer.draw_list({x:green,j:red},True)
+        visualizer.draw_list({x:green,y:red},True)
         j+=1
+        y+=1
 
 
 def main():
@@ -209,7 +211,7 @@ def main():
 
     while run:
         clock.tick()
-        if sorting and merging == False:
+        if sorting == True and merging == False:
             try:
                 next(sorting_algorithm_generator)
                 
@@ -233,21 +235,25 @@ def main():
                 sorting_algorithm_generator = sorting_algorithm(visualizer)
 
             if event.key == pygame.K_m and not sorting:
+                sorting_algorithm_name = "Merge Sort"
+                visualizer.draw(sorting_algorithm_name)
                 sorting = True
                 merging = True
                 merge_sort(visualizer,visualizer.a_list,0,len(visualizer.a_list)-1)
-                sorting_algorithm_name = "MergeSort"
+                sorting = False
+                merging = False
             
             if event.key == pygame.K_b and sorting == False:
-                sorting = True
                 sorting_algorithm = bubble_sort
                 sorting_algorithm_name = "Bubble Sort"
             
             if event.key == pygame.K_i and sorting == False:
-                sorting = True
                 sorting_algorithm = insertion_sort
-                sorting_algorithm_name = "Insetion Sort"
+                sorting_algorithm_name = "Insertion Sort"
 
+            if event.key == pygame.K_n and sorting == False:
+                a_list = create_list(length,min_value,max_value)
+                visualizer.set_list(a_list)
     
 
     pygame.quit()
